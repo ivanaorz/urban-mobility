@@ -22,35 +22,33 @@ class AccountServiceUnitTest {
     @InjectMocks
     private AccountService accountService;
 
-    private Account accountOne;
+    private Account accountToCreate;
 
     @BeforeEach
     public void setUp() {
-        //Creating a car object for carOne
-        accountOne = Account.builder()
+        //Creating an account object for accountToCreate
+        accountToCreate = Account.builder()
                 .username("Tom")
-                .role("user")
-                .paymentInfo("3334 5566 8888 9090")
+                .role("User")
+                .paymentInfo("3334 5566 3432 9090")
                 .paymentHistory(4)
                 .isPaymentSet(true)
                 .phone("97850484783")
-                .placedBookings("3")
+                .activeBookings("3")
                 .build();
     }
     @Test
-    void saveAccount() {
+    void createAccount_Should_Return_TheCreatedAccount() {
 
                 // Arrange:
-                when(accountRepository.save(any(Account.class))).thenReturn(accountOne);
+                when(accountRepository.save(accountToCreate)).thenReturn(accountToCreate);
 
                 // Act:
-                Account savedAccount = accountService.saveAccount(accountOne);
+                Account createdAccount = accountService.createAccount(accountToCreate);
 
                 // Assert:
-                verify(accountRepository, times(1)).save(accountOne);
-
-                // Assert:
-                assertEquals(accountOne, savedAccount);
+                verify(accountRepository, times(1)).save(accountToCreate);
+                assertEquals(accountToCreate, createdAccount);
             }
         }
 

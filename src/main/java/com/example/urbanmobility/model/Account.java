@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 
 @Entity(name = "Account") //enables JPA
 
-//@Table(name = "accounts")
 
 public class Account {
     @Id
@@ -35,8 +34,8 @@ public class Account {
             @Column(name = "payment_history", nullable = false)
     private int paymentHistory;
 
-            @Column(name = "placed_bookings", nullable = false)
-    private String placedBookings;
+            @Column(name = "active_bookings", nullable = false)
+    private String activeBookings;
 
             @Column(name = "is_payment_set", nullable = false)
     private boolean isPaymentSet;
