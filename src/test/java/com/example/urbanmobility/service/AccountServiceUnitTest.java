@@ -35,7 +35,7 @@ class AccountServiceUnitTest {
                 .paymentInfo("3334 5566 3432 9090")
                 .paymentHistory(4)
                 .isPaymentSet(true)
-                .phone("97850484783")
+                .phone("0722946563")
                 .activeBookings("3")
                 .build();
     }
@@ -67,10 +67,23 @@ class AccountServiceUnitTest {
 
         // Verify that findByUsername was called
         verify(accountRepository, times(1)).findByUsername(accountToCreate.getUsername());
-
-
     }
 
+    @Test
+    void createAccount_Should_ReturnErrorMessage_If_InvalidPhoneNumber() {
+        accountToCreate.setPhone("123456789"); // Invalid phone number (less than 10 digits)
+        // Act and Assert:
+        Exception exception = assertThrows(InvalidPhoneNumberException.class, () -> {
+            accountService.createAccount(accountToCreate);
+        });
+        // Verifying that the error message is as expected
+        String expectedErrorMessage = "Invalid phone number. Please enter a correct phone number.";
+        String actualErrorMessage = exception.getMessage();
+        assertEquals(expectedErrorMessage, actualErrorMessage);
+
+        // Ensuring that accountRepository.save() was not called
+        verify(accountRepository, never()).save(any(Account.class));
+    }
 
         }
 

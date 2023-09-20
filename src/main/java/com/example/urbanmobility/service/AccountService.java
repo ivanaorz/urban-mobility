@@ -24,12 +24,24 @@ public class AccountService {
         if (accountRepository.findByUsername(account.getUsername()) != null) {
             throw new UsernameAlreadyExistsException("This username already exists. Try another username.");
         }
-        // Check if a car with the same plate already exists
-//        if (carRepository.existsByCarPlate(car.getCarPlate())) {
-//            throw new DuplicateCarException("A car with the same plate already exists.");
-//        }
-        // If no duplicate is found, proceed with saving the car
+        // Check if the phone number is invalid
+        if (!isValidPhoneNumber(account.getPhone())) {
+            throw new InvalidPhoneNumberException("Invalid phone number. Please enter a correct phone number.");
+        }
+
         return accountRepository.save(account);
+    }
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return false;
+        }
+
+        // Remove any non-digit characters from the phone number
+        String digitsOnly = phoneNumber.replaceAll("[^0-9]", "");
+
+        // Check if the resulting string has exactly 10 digits
+        return digitsOnly.length() == 10;
     }
     public Optional <Account> getAccountById(long id) {
 
