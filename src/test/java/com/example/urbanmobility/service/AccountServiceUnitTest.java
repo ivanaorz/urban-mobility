@@ -99,7 +99,25 @@ class AccountServiceUnitTest {
         // Ensuring that accountRepository.save() was not called
         verify(accountRepository, never()).save(any(Account.class));
     }
+    @Test
+    void createAccount_Should_ReturnErrorMessage_If_InvalidCardNumberFormat() {
+        accountToCreate.setPaymentInfo("3477 8569"); //Invalid card number format (less than 16 digits)
 
-        }
+        // Act and Assert:
+        Exception exception = assertThrows(InvalidCardNumberException.class, () -> {
+            accountService.createAccount(accountToCreate);
+        });
+
+        // Verifying that the error message is as expected
+        String expectedErrorMessage = "Invalid card number format. Card number must have 16 digits.";
+        String actualErrorMessage = exception.getMessage();
+        assertEquals(expectedErrorMessage, actualErrorMessage);
+
+        // Ensuring that accountRepository.save() was not called
+        verify(accountRepository, never()).save(any(Account.class));
+    }
+
+
+}
 
 
