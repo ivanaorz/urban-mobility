@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 
-@Entity //enables JPA
+@Entity(name = "Account") //enables JPA
 
 //@Table(name = "accounts")
 
-public class AccountEntity {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
