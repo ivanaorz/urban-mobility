@@ -36,12 +36,8 @@ public class AccountService {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
             return false;
         }
+        return phoneNumber.matches("[0-9]{10}");
 
-        // Remove any non-digit characters from the phone number
-        String digitsOnly = phoneNumber.replaceAll("[^0-9]", "");
-
-        // Check if the resulting string has exactly 10 digits
-        return digitsOnly.length() == 10;
     }
     public Optional <Account> getAccountById(long id) {
 

@@ -84,6 +84,21 @@ class AccountServiceUnitTest {
         // Ensuring that accountRepository.save() was not called
         verify(accountRepository, never()).save(any(Account.class));
     }
+    @Test
+    void createAccount_Should_ReturnErrorMessage_If_PhoneNumber_Contains_LettersAndOrSymbols() {
+        accountToCreate.setPhone("-1234567890p"); // Invalid phone number (contains letter and symbol)
+        // Act and Assert:
+        Exception exception = assertThrows(InvalidPhoneNumberException.class, () -> {
+            accountService.createAccount(accountToCreate);
+        });
+        // Verifying that the error message is as expected
+        String expectedErrorMessage = "Invalid phone number. Please enter a correct phone number.";
+        String actualErrorMessage = exception.getMessage();
+        assertEquals(expectedErrorMessage, actualErrorMessage);
+
+        // Ensuring that accountRepository.save() was not called
+        verify(accountRepository, never()).save(any(Account.class));
+    }
 
         }
 
