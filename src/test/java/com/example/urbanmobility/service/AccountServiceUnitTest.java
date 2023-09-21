@@ -157,23 +157,25 @@ class AccountServiceUnitTest {
         verify(accountRepository, times(1)).deleteById(accountId);
     }
 
+    @Test
+    void deleteAccount_Should_ReturnAccountNotFound_WhenAccountDoesNotExist() {
+        // Arrange
+        Long nonExistentAccountId = 2L; // Assuming this ID does not exist in the repository
+        // Simulating that the account does not exist
+        when(accountRepository.existsById(nonExistentAccountId)).thenReturn(false);
+
+        // Act and Assert
+        assertThrows(EntityNotFoundException.class, () -> {
+            accountService.deleteAccount(nonExistentAccountId);
+        });
+    }
     }
 
 
 
-        // Arrange
-//        long accountId = accountToCreate.getId();
-//        Account existingAccount = new Account();
-//        existingAccount.setId(accountId);
 
-        // Mock the repository behavior
-//        when(accountRepository.existsById(accountId)).thenReturn(true);
 
-        // Act
-//        accountService.deleteAccount(accountId);
 
-        // Assert
-//        verify(accountRepository, times(1)).deleteById(accountId);
 
 
 
