@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -39,6 +41,8 @@ class AccountServiceUnitTest {
                 .activeBookings("3")
                 .build();
     }
+
+  //METHOD: createAccount
     @Test
     void createAccount_Should_Return_TheCreatedAccount() {
 
@@ -134,7 +138,50 @@ class AccountServiceUnitTest {
         verify(accountRepository, never()).save(any(Account.class));
     }
 
+    //METHOD: deleteAccount
 
-}
+    @Test
+    void deleteAccount_Should_DeleteById_AnExistingAccount_() {
+        // Arrange
+//
+        Long accountId = accountToCreate.getId(); //Taking the ID from the variable accountToCreate
+
+        // Mocking the behavior of accountRepository.deleteById(accountId)
+        doNothing().when(accountRepository).deleteById(accountId);
+
+        // Act
+        accountService.deleteAccount(accountId);
+
+        // Assert
+        // Verifying that accountRepository's deleteById method was called with the correct ID
+        verify(accountRepository, times(1)).deleteById(accountId);
+    }
+
+    }
+
+
+
+        // Arrange
+//        long accountId = accountToCreate.getId();
+//        Account existingAccount = new Account();
+//        existingAccount.setId(accountId);
+
+        // Mock the repository behavior
+//        when(accountRepository.existsById(accountId)).thenReturn(true);
+
+        // Act
+//        accountService.deleteAccount(accountId);
+
+        // Assert
+//        verify(accountRepository, times(1)).deleteById(accountId);
+
+
+
+
+
+
+
+
+
 
 
