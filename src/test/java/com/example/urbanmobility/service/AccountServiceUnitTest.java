@@ -100,8 +100,8 @@ class AccountServiceUnitTest {
         verify(accountRepository, never()).save(any(Account.class));
     }
     @Test
-    void createAccount_Should_ReturnErrorMessage_If_InvalidCardNumberFormat() {
-        accountToCreate.setPaymentInfo("3477 8569"); //Invalid card number format (less than 16 digits)
+    void createAccount_Should_ReturnErrorMessage_If_InvalidCardNumberDigitsLength() {
+        accountToCreate.setPaymentInfo("3477 8567 3477 7"); //Invalid card number format (less than 16 digits)
 
         // Act and Assert:
         Exception exception = assertThrows(InvalidCardNumberException.class, () -> {

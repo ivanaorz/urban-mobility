@@ -1,6 +1,5 @@
 package com.example.urbanmobility.service;
 
-//import com.example.urbanmobility.model.Account;
 import com.example.urbanmobility.exception.*;
 import com.example.urbanmobility.model.Account;
 import com.example.urbanmobility.repository.AccountRepository;
@@ -32,7 +31,6 @@ public class AccountService {
         if (!isValidCardNumber(account.getPaymentInfo())) {
             throw new InvalidCardNumberException("Invalid card number format. Card number must have 16 digits.");
         }
-
         return accountRepository.save(account);
     }
 
@@ -47,13 +45,9 @@ public class AccountService {
             if (cardNumber == null || cardNumber.isEmpty()) {
                 return false;
             }
-            return cardNumber.matches("[0-9]{16}");
+            //Checking for 16 digits with spaces, disallowing letters and symbols
+            return cardNumber.matches("^[0-9 ]+$") && cardNumber.replaceAll(" ", "").matches("^[0-9]{16}$");
 
-            // Remove any non-digit characters from the card number
-//            String digitsOnly = cardNumber.replaceAll("[^0-9]", "");
-
-            // Check if the resulting string has exactly 12 digits
-//            return digitsOnly.length() == 12;
         }
 
 
