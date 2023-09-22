@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -169,7 +170,52 @@ class AccountServiceUnitTest {
             accountService.deleteAccount(nonExistentAccountId);
         });
     }
+
+    //METHOD: updateAccount
+
+    @Test
+    void updateAccount_Should_Return_UpdatedAccount() {
+        long accountId = accountToCreate.getId();
+        // Creating an updated account with the desired changes
+        Account updatedAccount = Account.builder()
+                .id(accountId)
+                .username("UpdatedTom")
+                .role("Admin")
+                .paymentInfo("1234 5678 9012 3456")
+                .paymentHistory(5)
+                .isPaymentSet(false)
+                .phone("1234567890")
+                .activeBookings("5")
+                .build();
+
+        // Mocking the behavior of accountRepository.findById to return the existing account
+        when(accountRepository.existsById(accountId)).thenReturn(true);
+
+        // Mocking the behavior of accountRepository.save to return the updated account
+        when(accountRepository.save(updatedAccount)).thenReturn(updatedAccount);
+        Account result = accountService.updateAccount(accountId, updatedAccount);
+
+        // Assert
+        verify(accountRepository, times(1)).existsById(accountId);
+        verify(accountRepository, times(1)).save(updatedAccount);
+        assertEquals(updatedAccount, result);
     }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

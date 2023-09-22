@@ -59,7 +59,11 @@ public class AccountService {
     }
 
 
-    public Account updateAccount(Account updatedAccount) {
+    public Account updateAccount(Long accountId,Account updatedAccount) {
+        if (!accountRepository.existsById(accountId)) {
+            throw new ResourceNotFoundException("Account with ID" + " " + accountId + " " + "does not exist");
+        }
+        updatedAccount.setId(accountId); // Setting the ID of the updated account
         return accountRepository.save(updatedAccount);
     }
 
