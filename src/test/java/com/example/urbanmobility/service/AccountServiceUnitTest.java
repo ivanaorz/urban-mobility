@@ -201,7 +201,7 @@ class AccountServiceUnitTest {
         assertEquals(updatedAccount, result);
     }
     @Test
-    void updateAccount_Should_ThrowValidationException_If_UsernameFieldIsMissing() {
+    void updateAccount_Should_ThrowValidationException_If_UsernameDataIsMissing() {
         long accountId = accountToCreate.getId();
 
         // Creating an updating account with an empty username (invalid data)
@@ -217,6 +217,30 @@ class AccountServiceUnitTest {
         });
         verify(accountRepository, never()).save(any(Account.class));
     }
+    @Test
+    void updateAccount_Should_ThrowResourceNotFoundException_On_NonExistentAccount() {
+        long nonExistentAccountId = 999L; // An ID that doesn't exist in the repository
+        Account updatedAccount = Account.builder()
+                .id(nonExistentAccountId)
+                .username("UpdatedTom")
+                .role("Admin")
+                .paymentInfo("1234 5678 9012 3456")
+                .paymentHistory(5)
+                .isPaymentSet(false)
+                .phone("1234567890")
+                .activeBookings("5")
+                .build();
+
+        // Mocking the behavior of accountRepository.existsById to return false (non-existent account)
+        when(accountRepository.existsById(nonExistentAccountId)).thenReturn(false);
+
+        // Act and Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            accountService.updateAccount(nonExistentAccountId, updatedAccount);
+        });
+        verify(accountRepository, times(1)).existsById(nonExistentAccountId);
+    }
+
 
 
 }
