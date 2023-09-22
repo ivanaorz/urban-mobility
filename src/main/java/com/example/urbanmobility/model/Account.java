@@ -39,6 +39,5 @@ public class Account {
 
             @Column(name = "is_payment_set", nullable = false)
     private boolean isPaymentSet;
-
 }
 

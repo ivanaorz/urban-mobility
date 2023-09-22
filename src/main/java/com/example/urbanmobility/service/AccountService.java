@@ -64,10 +64,22 @@ public class AccountService {
             throw new ResourceNotFoundException("Account with ID" + " " + accountId + " " + "does not exist");
         }
         if (updatedAccount.getUsername() == null || updatedAccount.getUsername().isEmpty()) {
-            throw new ValidationException("Username field cannot be empty");
+            throw new IllegalArgumentException("Username field cannot be empty");
+        }
+        if (allFieldsNullOrEmpty(updatedAccount)) {
+            throw new IllegalArgumentException("Updated account must contain at least one non-empty field");
         }
         updatedAccount.setId(accountId); // Setting the ID of the updated account
         return accountRepository.save(updatedAccount);
+    }
+    private boolean allFieldsNullOrEmpty(Account account) {
+        return
+                account.getUsername() == null || account.getUsername().isEmpty() &&
+                        account.getRole() == null || account.getRole().isEmpty() &&
+                        account.getPaymentInfo() == null || account.getPaymentInfo().isEmpty() &&
+                        account.getPaymentHistory() == 0 &&
+                        account.getPhone() == null || account.getPhone().isEmpty() &&
+                        account.getActiveBookings() == null || account.getActiveBookings().isEmpty();
     }
 
     public void deleteAccount(long id) {

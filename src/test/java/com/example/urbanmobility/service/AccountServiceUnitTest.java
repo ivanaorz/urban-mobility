@@ -201,7 +201,7 @@ class AccountServiceUnitTest {
         assertEquals(updatedAccount, result);
     }
     @Test
-    void updateAccount_Should_ThrowValidationException_If_UsernameDataIsMissing() {
+    void updateAccount_Should_ThrowException_If_UsernameDataIsMissing() {
         long accountId = accountToCreate.getId();
 
         // Creating an updating account with an empty username (invalid data)
@@ -212,7 +212,7 @@ class AccountServiceUnitTest {
         // Mocking the behavior of accountRepository.existsById to return true
         when(accountRepository.existsById(accountId)).thenReturn(true);
 
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             accountService.updateAccount(accountId, updatedAccount);
         });
         verify(accountRepository, never()).save(any(Account.class));
@@ -240,9 +240,29 @@ class AccountServiceUnitTest {
         });
         verify(accountRepository, times(1)).existsById(nonExistentAccountId);
     }
+    @Test
+    void updateAccount_WithEmptyData_ShouldThrowException() {
+        long accountId = accountToCreate.getId();
+        // Updating account with empty (null) data
+        Account updatedAccount = Account.builder()
+                .id(accountId)
+                .username("")
+                .role(null)
+                .paymentInfo("")
+                .paymentHistory(0)
+                .isPaymentSet(false)
+                .phone(null)
+                .activeBookings("")
+                .build();
 
+        // Mock the behavior of accountRepository.existsById to return true
+        when(accountRepository.existsById(accountId)).thenReturn(true);
 
-
+        // Act and Assert
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> {accountService.updateAccount(accountId, updatedAccount);});
+    }
 }
 
 
