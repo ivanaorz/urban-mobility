@@ -63,6 +63,9 @@ public class AccountService {
         if (!accountRepository.existsById(accountId)) {
             throw new ResourceNotFoundException("Account with ID" + " " + accountId + " " + "does not exist");
         }
+        if (updatedAccount.getUsername() == null || updatedAccount.getUsername().isEmpty()) {
+            throw new ValidationException("Username field cannot be empty");
+        }
         updatedAccount.setId(accountId); // Setting the ID of the updated account
         return accountRepository.save(updatedAccount);
     }

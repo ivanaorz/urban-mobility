@@ -200,7 +200,26 @@ class AccountServiceUnitTest {
         verify(accountRepository, times(1)).save(updatedAccount);
         assertEquals(updatedAccount, result);
     }
+    @Test
+    void updateAccount_Should_ThrowValidationException_If_UsernameFieldIsMissing() {
+        long accountId = accountToCreate.getId();
+
+        // Creating an updating account with an empty username (invalid data)
+        Account updatedAccount = new Account();
+        updatedAccount.setId(accountId);
+        updatedAccount.setUsername(""); // Invalid: Empty username
+
+        // Mocking the behavior of accountRepository.existsById to return true
+        when(accountRepository.existsById(accountId)).thenReturn(true);
+
+        assertThrows(ValidationException.class, () -> {
+            accountService.updateAccount(accountId, updatedAccount);
+        });
+        verify(accountRepository, never()).save(any(Account.class));
     }
+
+
+}
 
 
 
