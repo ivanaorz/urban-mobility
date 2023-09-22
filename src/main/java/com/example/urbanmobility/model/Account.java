@@ -11,11 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 
-@Entity //enables JPA
+@Entity(name = "Account") //enables JPA
 
-//@Table(name = "accounts")
 
-public class AccountEntity {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -35,11 +34,10 @@ public class AccountEntity {
             @Column(name = "payment_history", nullable = false)
     private int paymentHistory;
 
-            @Column(name = "placed_bookings", nullable = false)
-    private String placedBookings;
+            @Column(name = "active_bookings", nullable = false)
+    private String activeBookings;
 
             @Column(name = "is_payment_set", nullable = false)
     private boolean isPaymentSet;
-
 }
 
