@@ -26,15 +26,15 @@ class AccountServiceIntegrationTest {
     public void setUp(){
         // Creating an Account object
          account = Account.builder()
-                .id(1L)
-                .username("Tom")
-                .role("User")
-                .paymentInfo("3333 3333 3333 3333")
-                .paymentHistory(4)
-                .isPaymentSet(true)
-                .phone("0722946563")
-                .activeBookings("3")
-                .build();
+                 .id(1L)
+                 .username("Tom")
+                 .role("User")
+                 .paymentInfo("3334 5566 3432 9090")
+                 .paymentHistory(4)
+                 .isPaymentSet(true)
+                 .phone("0722946563")
+                 .activeBookings("3")
+                 .build();
     }
 
     //METHOD: createAccount

@@ -85,7 +85,6 @@ public class AccountService {
     public void deleteAccount(long id) {
         // Check if the account exists
         if (accountRepository.existsById(id)) {
-            accountRepository.deleteById(id);
         } else {
             throw new EntityNotFoundException("Account not found");
         }
