@@ -140,6 +140,23 @@ class AccountServiceUnitTest {
 
     //METHOD: deleteAccount
 
+    @Test
+    void deleteAccount_Should_DeleteById_AnExistingAccount() {
+
+        // Arrange
+        Long accountId = accountToCreate.getId();
+
+        // Mocking the behavior of accountRepository.existsById to return false
+        when(accountRepository.existsById(accountId)).thenReturn(true);
+        doNothing().when(accountRepository).deleteById(accountId);
+
+        // Act
+        accountService.deleteAccount(accountId);
+
+        // Assert
+        verify(accountRepository, times(1)).deleteById(accountId);
+    }
+
 
     @Test
     void deleteAccount_Should_ReturnAccountNotFound_WhenAccountDoesNotExist() {

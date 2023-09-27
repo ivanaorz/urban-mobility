@@ -4,6 +4,8 @@ import com.example.urbanmobility.exception.*;
 import com.example.urbanmobility.model.Account;
 import com.example.urbanmobility.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -31,8 +33,20 @@ public class AccountService {
         if (!isValidCardNumber(account.getPaymentInfo())) {
             throw new InvalidCardNumberException("Invalid card number format. Card number must have 16 digits.");
         }
-        return accountRepository.save(account);
+        // Simulate an error that requires a transaction rollback
+        if (account.getUsername().equals("error")) {
+            throw new AccountCreationFailedException("Simulated account creation failure.");
+        }
+        try {
+            return accountRepository.save(account);
+        } catch (DataAccessException ex) {
+            // Wrap the exception and re-throw it as a custom exception
+            throw new DatabaseConnectionException("Failed to create the account due to a database connection error.", ex);
+        }
     }
+        //return accountRepository.save(account);
+
+
 
     private boolean isValidPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
@@ -83,13 +97,12 @@ public class AccountService {
     }
 
     public void deleteAccount(long id) {
-        // Check if the account exists
-        if (accountRepository.existsById(id)) {
-        } else {
-            throw new EntityNotFoundException("Account not found");
+            // Checking if the account exists
+            if (accountRepository.existsById(id)) {
+                accountRepository.deleteById(id);
+            } else {
+                throw new EntityNotFoundException("Account not found");
+            }
+
         }
-
-        accountRepository.deleteById(id);
     }
-
-}
