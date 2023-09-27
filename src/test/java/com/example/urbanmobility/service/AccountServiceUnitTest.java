@@ -14,7 +14,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -142,21 +141,22 @@ class AccountServiceUnitTest {
     //METHOD: deleteAccount
 
     @Test
-    void deleteAccount_Should_DeleteById_AnExistingAccount_() {
-        // Arrange
-//
-        Long accountId = accountToCreate.getId(); //Taking the ID from the variable accountToCreate
+    void deleteAccount_Should_DeleteById_AnExistingAccount() {
 
-        // Mocking the behavior of accountRepository.deleteById(accountId)
+        // Arrange
+        Long accountId = accountToCreate.getId();
+
+        // Mocking the behavior of accountRepository.existsById to return false
+        when(accountRepository.existsById(accountId)).thenReturn(true);
         doNothing().when(accountRepository).deleteById(accountId);
 
         // Act
         accountService.deleteAccount(accountId);
 
         // Assert
-        // Verifying that accountRepository's deleteById method was called with the correct ID
         verify(accountRepository, times(1)).deleteById(accountId);
     }
+
 
     @Test
     void deleteAccount_Should_ReturnAccountNotFound_WhenAccountDoesNotExist() {
