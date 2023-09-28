@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -65,11 +66,13 @@ public class AccountService {
         }
 
 
-
-
     public Optional <Account> getAccountById(long id) {
 
         return accountRepository.findById(id);
+    }
+    public List<Account> getAllAccounts() {
+
+        return accountRepository.findAll();
     }
 
 
