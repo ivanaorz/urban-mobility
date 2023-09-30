@@ -1,8 +1,10 @@
 package com.example.urbanmobility.controller;
 
+import com.example.urbanmobility.exception.ResourceNotFoundException;
 import com.example.urbanmobility.model.Account;
 import com.example.urbanmobility.service.AccountService;
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +66,7 @@ public class AccountController {
         accountService.deleteAccount(id);
         return new ResponseEntity<>("Account was deleted successfully", HttpStatus.OK);
     }
+
 
 }
 
