@@ -86,7 +86,7 @@ public class AccountService {
         if (allFieldsNullOrEmpty(updatedAccount)) {
             throw new IllegalArgumentException("Updated account must contain at least one non-empty field");
         }
-        updatedAccount.setId(accountId); // Setting the ID of the updated account
+        updatedAccount.setId(accountId);
         return accountRepository.save(updatedAccount);
     }
     private boolean allFieldsNullOrEmpty(Account account) {
