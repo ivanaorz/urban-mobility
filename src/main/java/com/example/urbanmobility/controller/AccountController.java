@@ -37,10 +37,6 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }
-
-
-
-
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody Account account) {
         if (account == null || StringUtils.isBlank(account.getUsername())) {

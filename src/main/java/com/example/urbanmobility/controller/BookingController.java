@@ -4,6 +4,7 @@ import com.example.urbanmobility.exception.ResourceNotFoundException;
 import com.example.urbanmobility.model.Booking;
 import com.example.urbanmobility.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
