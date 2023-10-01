@@ -14,6 +14,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -146,19 +148,165 @@ class BookingControllerEndToEndTest {
                 .andExpect(status().isNotFound());
     }
 
-
+    //METHOD: updateBooking
 
     @Test
-    void getBookingById() {
+    public void updateBooking_Should_ReturnUpdatedBooking_OnSuccess() throws Exception {
+        // Creating a new booking first
+        String bookingJson = objectMapper.writeValueAsString(validBooking);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingJson))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        // Extracting the bookingId from the response
+        String responseJson = result.getResponse().getContentAsString();
+        JsonNode responseNode = objectMapper.readTree(responseJson);
+        Long existingBookingId = responseNode.get("bookingId").asLong();
+
+        // Updating the booking
+        validBooking.setUsername("updatedUser");
+        String updatedBookingJson = objectMapper.writeValueAsString(validBooking);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/bookings/" + existingBookingId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedBookingJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("updatedUser"));
     }
 
     @Test
-    void getAllBookings() {
+    public void updateBooking_Should_ReturnNotFound_OnNonExistingBooking() throws Exception {
+        Long nonExistingBookingId = 99999L;
+        String updatedBookingJson = objectMapper.writeValueAsString(validBooking);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/bookings/" + nonExistingBookingId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedBookingJson))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void updateBooking() {
+    public void updateBooking_Should_ReturnBadRequest_OnInvalidBookingId() throws Exception {
+        String invalidBookingId = "invalidId";
+        String updatedBookingJson = objectMapper.writeValueAsString(validBooking);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/bookings/" + invalidBookingId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedBookingJson))
+                .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void updateBooking_Should_ReturnNotFound_OnBookingWithoutId() throws Exception {
+        String updatedBookingJson = objectMapper.writeValueAsString(validBooking);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/bookings/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedBookingJson))
+                .andExpect(status().isNotFound());
+    }
+
+    //METHOD: getAllBookings
+
+    @Test
+    public void getAllBookings_Should_ReturnEmptyList_When_NoBookingsExist() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    public void getAllBookings_Should_ReturnSingleBooking_When_OneBookingExists() throws Exception {
+        // Creating a new booking
+        String bookingJson = objectMapper.writeValueAsString(validBooking);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingJson))
+                .andExpect(status().isCreated());
+
+        // Getting all bookings
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].username").value("testUser"))
+                .andExpect(jsonPath("$[0].routeId").value(1));
+    }
+
+    @Test
+    public void getAllBookings_Should_ReturnMultipleBookings_When_MultipleBookingsExist() throws Exception {
+        // Creating the first booking
+        String bookingJson = objectMapper.writeValueAsString(validBooking);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingJson))
+                .andExpect(status().isCreated());
+
+        // Creating a secondary booking object
+        Booking secondBooking = new Booking();
+        secondBooking.setUsername("anotherTestUser");
+        secondBooking.setRouteId(2);
+        String secondBookingJson = objectMapper.writeValueAsString(secondBooking);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(secondBookingJson))
+                .andExpect(status().isCreated());
+
+        // Getting all bookings
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    public void getAllBookings_Should_NotReturnDeletedBooking() throws Exception {
+        String bookingJson = objectMapper.writeValueAsString(validBooking);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingJson))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+
+        String responseJson = result.getResponse().getContentAsString();
+        JsonNode responseNode = objectMapper.readTree(responseJson);
+        Long createdBookingId = responseNode.get("bookingId").asLong();
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/bookings/" + createdBookingId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        // Getting all bookings and ensure the deleted one is not returned
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+
+
+
+
+
 
 
 }
