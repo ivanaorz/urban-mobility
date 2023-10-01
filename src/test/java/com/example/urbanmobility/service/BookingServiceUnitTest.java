@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -204,16 +205,34 @@ class BookingServiceUnitTest {
         assertTrue(result.containsAll(expectedList));
     }
 
-
-
-    @Test
-    void getBookingById() {
-    }
+    //METHOD: getBookingById
 
     @Test
-    void getAllBookings() {
+    void getBookingById_Should_ReturnBooking_When_BookingExists() {
+        Mockito.when(bookingRepository.findById(booking.getBookingId())).thenReturn(Optional.of(booking));
+
+        Optional<Booking> result = bookingService.getBookingById(booking.getBookingId());
+
+        assertTrue(result.isPresent());
+        assertEquals(booking, result.get());
     }
+    @Test
+    void getBookingById_Should_ReturnEmptyOptional_When_BookingDoesNotExist() {
 
+        Mockito.when(bookingRepository.findById(2L)).thenReturn(Optional.empty());
 
+        Optional<Booking> result = bookingService.getBookingById(2L);
+
+        assertFalse(result.isPresent());
+    }
+    @Test
+    void getBookingById_Should_ReturnEmptyOptional_On_BookingWithNegativeId() {
+
+        Mockito.when(bookingRepository.findById(-1L)).thenReturn(Optional.empty());
+
+        Optional<Booking> result = bookingService.getBookingById(-1L);
+
+        assertFalse(result.isPresent());
+    }
 
 }
