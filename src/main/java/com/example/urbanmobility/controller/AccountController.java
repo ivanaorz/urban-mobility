@@ -39,17 +39,12 @@ public class AccountController {
     }
 
 
-//    @PostMapping
-//    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-//        accountService.createAccount(account);
-//        return new ResponseEntity<>(account, HttpStatus.CREATED);
-//    }
+
 
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-        // Perform validation on the 'account' object
         if (account == null || StringUtils.isBlank(account.getUsername())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Return 400 Bad Request for validation failure
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         accountService.createAccount(account);
@@ -69,6 +64,11 @@ public class AccountController {
 
 
 }
+//   @PostMapping
+//    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
+//        accountService.createAccount(account);
+//        return new ResponseEntity<>(account, HttpStatus.CREATED);
+//    }
 
 
 
