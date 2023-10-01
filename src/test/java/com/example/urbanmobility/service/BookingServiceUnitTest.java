@@ -11,6 +11,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -155,6 +160,51 @@ class BookingServiceUnitTest {
 
         assertEquals(bookingWithDifferentId, updatedBooking);
     }
+
+    //METHOD: getAllBookings
+
+    @Test
+    void getAllBookings_Should_ReturnEmptyList_WhenNoBookingsInRepository() {
+        Mockito.when(bookingRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<Booking> result = bookingService.getAllBookings();
+
+        assertTrue(result.isEmpty());
+    }
+    @Test
+    void getAllBookings_Should_ReturnOneBooking_When_OnlyOneBookingIsInRepository() {
+        List<Booking> expectedList = Collections.singletonList(booking);
+        Mockito.when(bookingRepository.findAll()).thenReturn(expectedList);
+
+        List<Booking> result = bookingService.getAllBookings();
+
+        assertEquals(1, result.size());
+        assertEquals(booking, result.get(0));
+    }
+    @Test
+    void getAllBookings_Should_ReturnAllBookings_On_MultipleBookingsInRepository() {
+        Booking booking2 = Booking.builder()
+                .bookingId(2L)
+                .routeId(102)
+                .username("Alice")
+                .build();
+
+        Booking booking3 = Booking.builder()
+                .bookingId(3L)
+                .routeId(103)
+                .username("Bob")
+                .build();
+
+        List<Booking> expectedList = Arrays.asList(booking, booking2, booking3);
+        Mockito.when(bookingRepository.findAll()).thenReturn(expectedList);
+
+        List<Booking> result = bookingService.getAllBookings();
+
+        assertEquals(3, result.size());
+        assertTrue(result.containsAll(expectedList));
+    }
+
+
 
     @Test
     void getBookingById() {
