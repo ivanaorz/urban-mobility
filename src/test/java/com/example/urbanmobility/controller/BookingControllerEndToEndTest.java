@@ -2,6 +2,7 @@ package com.example.urbanmobility.controller;
 
 import com.example.urbanmobility.model.Booking;
 import com.example.urbanmobility.service.BookingService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -94,9 +96,57 @@ class BookingControllerEndToEndTest {
                 .andExpect(status().isBadRequest());
     }
 
+    //METHOD: deleteBooking
     @Test
-    void createBooking() {
+    public void deleteBooking_Should_ReturnNoContent_AfterDeletingBooking() throws Exception {
+        // Creating a new booking
+        String bookingJson = objectMapper.writeValueAsString(validBooking);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/bookings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookingJson))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        // Getting the bookingId from the response
+        String responseJson = result.getResponse().getContentAsString();
+        JsonNode responseNode = objectMapper.readTree(responseJson);
+        Long existingBookingId = responseNode.get("bookingId").asLong();
+
+        // Deleting the booking with the extracted ID
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/bookings/" + existingBookingId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
+
+
+    @Test
+    public void deleteBooking_Should_ReturnNotFound_OnNonExistingBooking() throws Exception {
+        Long nonExistingBookingId = 99999L; // Assuming this ID does not correspond to any booking
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/bookings/" + nonExistingBookingId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    public void deleteBooking_Should_ReturnBadRequest_OnInvalidBookingId() throws Exception {
+        String invalidBookingId = "invalidId"; //A non-numeric string
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/bookings/" + invalidBookingId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteBooking_Should_ReturnNotFound_OnBookingWithoutId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/bookings/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+
 
     @Test
     void getBookingById() {
@@ -110,7 +160,5 @@ class BookingControllerEndToEndTest {
     void updateBooking() {
     }
 
-    @Test
-    void deleteBooking() {
-    }
+
 }

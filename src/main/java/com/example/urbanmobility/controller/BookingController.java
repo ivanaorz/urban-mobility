@@ -26,19 +26,6 @@ public class BookingController {
         Booking savedBooking = bookingService.createBooking(booking);
         return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
     }
-//@PostMapping
-//public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
-//    try {
-//        Booking savedBooking = bookingService.createBooking(booking);
-//        return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
-//    } catch (IllegalArgumentException e) {
-//        // Return 400 Bad Request for null Booking object
-//        return new ResponseEntity<>("Invalid Booking Data", HttpStatus.BAD_REQUEST);
-//    } catch (DataIntegrityViolationException e) {
-//        // Return 400 Bad Request for empty username or invalid routeId
-//        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//    }
-//}
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Booking> getBookingById(@PathVariable Long bookingId) {
