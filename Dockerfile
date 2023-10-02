@@ -7,6 +7,6 @@
 
 FROM openjdk:17
 ARG JAR_FILE=target/urban-mobility-1.0.jar
-COPY ${JAR_FILE} /application.jar
-EXPOSE 8081
+#COPY ${JAR_FILE} /application.jar
+EXPOSE 8082
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
