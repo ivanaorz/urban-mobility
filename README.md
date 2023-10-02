@@ -19,7 +19,7 @@ Setting up the development pipeline:
 ![Screenshot 2023-10-01 103514](https://github.com/ivanaorz/urban-mobility/assets/113606494/04ab4533-270a-4c60-8202-d19550a3b09c)
 
   
--Enter the name of the branch of the development environment. 
+-Enter the development environment branch name. 
 ![Screenshot 2023-10-01 104003](https://github.com/ivanaorz/urban-mobility/assets/113606494/7da058eb-5337-4c53-9e0c-98596cb7786e)
 
 
@@ -42,6 +42,22 @@ Setting up the development pipeline:
 ![Screenshot 2023-10-01 110001](https://github.com/ivanaorz/urban-mobility/assets/113606494/64d43c3c-ffe1-4885-adfa-1a8f602aeef0)
 
 -Press 'save' and the development pipeline set up is ready!!!
+
+
+Setting up the production pipeline:
+- Press 'New Item'.
+
+![Screenshot 2023-10-01 100513](https://github.com/ivanaorz/urban-mobility/assets/113606494/b0410dd1-1730-40d1-a824-5b64cd4a193a)
+- Enter item name.
+- Choose 'Freestyle project' and press 'OK'.
+![Screenshot 2023-10-02 020034](https://github.com/ivanaorz/urban-mobility/assets/113606494/12e3e235-44a8-4b6b-8e07-6a71a1b51539)
+
+- Choose 'Git'.
+- Enter repository URL.
+- Enter the production environment branch name (in my case it is */main)
+![Screenshot 2023-10-02 020451](https://github.com/ivanaorz/urban-mobility/assets/113606494/ea67492f-cd23-485f-b5ae-07b001ca056f)
+
+
 
 
 
