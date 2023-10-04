@@ -57,6 +57,12 @@ Setting up the production pipeline:
 - Enter the production environment branch name (in my case it is */master)
 ![image](https://github.com/ivanaorz/urban-mobility/assets/113606494/4fd11ce8-fe9b-4588-b164-2a7ef79ad766)
 
+![Screenshot 2023-10-04 112723](https://github.com/ivanaorz/urban-mobility/assets/113606494/b005e4ff-cdc6-4333-b67c-6653ba893780)
+
+![Screenshot 2023-10-04 112813](https://github.com/ivanaorz/urban-mobility/assets/113606494/109bc841-957a-4123-b7cb-a0b5ec1eacba)
+
+
+
 
 
 
