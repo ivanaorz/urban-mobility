@@ -54,8 +54,9 @@ Setting up the production pipeline:
 
 - Choose 'Git'.
 - Enter repository URL.
-- Enter the production environment branch name (in my case it is */main)
-![Screenshot 2023-10-02 020451](https://github.com/ivanaorz/urban-mobility/assets/113606494/ea67492f-cd23-485f-b5ae-07b001ca056f)
+- Enter the production environment branch name (in my case it is */master)
+![image](https://github.com/ivanaorz/urban-mobility/assets/113606494/4fd11ce8-fe9b-4588-b164-2a7ef79ad766)
+
 
 
 
